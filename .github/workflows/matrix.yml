@@ -38,6 +38,6 @@ jobs:
     
     runs-on: ubuntu-latest
     steps:
-      - name: Matrix Runs
+      
       - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.input }}
 
