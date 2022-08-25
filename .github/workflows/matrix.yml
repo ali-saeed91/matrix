@@ -34,12 +34,20 @@ jobs:
           echo "Final Array is a = [ ${a[*]} ] "
           echo "::set-output name=test::${a[*]}"
   job2:
-    runs-on: ubuntu-latest
     needs: [job1]
     strategy:
+      fail-fast: false
       matrix:
-         os: [windows-latest, ubuntu-latest]
-         biapps: [${{needs.job1.outputs.output1}}]
+        include: ${{ toJson(needs.job1.outputs.output1) }}
+    # name: "${{ matrix.job_name }}"
+    runs-on: ubuntu-latest
     steps:
-      - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.os }} && echo ${{ matrix.biapps }}
+    #   - uses: actions/checkout@v2
+    # runs-on: ubuntu-latest
+    # needs: [job1]
+    # strategy:
+    #   matrix:
+    #      biapps: [${{needs.job1.outputs.output1}}]
+    # steps:
+      - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.include }}
 
