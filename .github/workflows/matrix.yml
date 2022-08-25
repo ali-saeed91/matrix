@@ -34,9 +34,9 @@ jobs:
           a=($(echo "$testarr" | tr ',' '\n'))
           echo "the array 'a' contains ${#a[@]} elements"
           echo "Final Array is a = [ ${a[*]} ] "
-          b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${testarr[@]}")
+          b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
           echo $b
-          echo "::set-output name=test::${toJSON(b)}"
+          echo "::set-output name=test::${$b}"
   job2:
     needs: [job1]
     strategy:
