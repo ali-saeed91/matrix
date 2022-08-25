@@ -36,13 +36,13 @@ jobs:
           echo "Final Array is a = [ ${a[*]} ] "
           b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
           echo $b
-          echo "::set-output name=test::{$b}"
+          echo "::set-output name=test::$b"
   job2:
     needs: [job1]
     strategy:
       fail-fast: false
       matrix:
-        include: ${{(needs.job1.outputs.output1)}}
+        input: ${{(needs.job1.outputs.output1)}}
     # name: "${{ matrix.job_name }}"
     runs-on: ubuntu-latest
     steps:
@@ -53,5 +53,5 @@ jobs:
     #   matrix:
     #      biapps: [${{needs.job1.outputs.output1}}]
     # steps:
-      - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.include }}
+      - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.input }}
 
