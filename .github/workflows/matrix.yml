@@ -43,7 +43,7 @@ jobs:
           echo "the array 'a' contains ${#a[@]} elements"
           echo "Final Array is a = [ ${a[*]} ] "
           jobs=(${a[*]})
-          echo "::set-output name=test::$($jobs)"
+          echo "::set-output name=matrix::$(${a[*]})"
   job2:
     runs-on: ubuntu-latest
     needs: [matrix]
