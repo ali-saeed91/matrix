@@ -37,12 +37,13 @@ jobs:
           b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
           echo $b
           echo "::set-output name=test::$(toJSON(${a[*]})"
+          echo $test
   job2:
     needs: [job1]
     strategy:
       fail-fast: false
       matrix:
-        input: "${{needs.job1.outputs.output1}}"
+        input: ${{needs.job1.outputs.output1}}
     # name: "${{ matrix.job_name }}"
     runs-on: ubuntu-latest
     steps:
