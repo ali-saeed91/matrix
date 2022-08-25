@@ -14,7 +14,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{toJSON(steps.step1.outputs.test)}} 
+      output1: ${{steps.step1.outputs.test}} 
     steps:
       - uses: actions/checkout@v3
       - id: step1
@@ -34,15 +34,15 @@ jobs:
           a=($(echo "$testarr" | tr ',' '\n'))
           echo "the array 'a' contains ${#a[@]} elements"
           echo "Final Array is a = [ ${a[*]} ] "
-          b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
+          b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${testarr[@]}")
           echo $b
-          echo "::set-output name=test::$testarr"
+          echo "::set-output name=test::$b"
   job2:
     needs: [job1]
     strategy:
       fail-fast: false
       matrix:
-        include: ${{fromJSON(needs.job1.outputs.output1)}}
+        include: ${{needs.job1.outputs.output1}}
     # name: "${{ matrix.job_name }}"
     runs-on: ubuntu-latest
     steps:
