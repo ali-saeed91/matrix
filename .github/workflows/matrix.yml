@@ -36,7 +36,7 @@ jobs:
           echo "Final Array is a = [ ${a[*]} ] "
           b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
           echo $b
-          echo "::set-output name=test::$(toJSON(${a[*]}))"
+          echo "::set-output name=test::(toJSON(${a[*]})"
   job2:
     needs: [job1]
     strategy:
