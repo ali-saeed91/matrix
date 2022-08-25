@@ -22,6 +22,8 @@ jobs:
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod a+x /usr/local/bin/yq
           yq --version
+          sudo apt install -y jq
+          jq --version
           declare -a array=$(yq '.biapps' config.yaml)
           echo $array
           declare -a newarr=$(echo ${array[@]//:/ })
@@ -32,7 +34,9 @@ jobs:
           a=($(echo "$testarr" | tr ',' '\n'))
           echo "the array 'a' contains ${#a[@]} elements"
           echo "Final Array is a = [ ${a[*]} ] "
-          echo "::set-output name=test::$(${a[*]} | ConvertTo-JSON -Compress))"
+          b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
+          echo $b
+          echo "::set-output name=test::$b"
   job2:
     needs: [job1]
     strategy:
