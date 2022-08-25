@@ -21,38 +21,23 @@ jobs:
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod a+x /usr/local/bin/yq
-          yq --version
           sudo apt install -y jq
-          jq --version
           declare -a array=$(yq '.biapps' config.yaml)
-          echo $array
           declare -a newarr=$(echo ${array[@]//:/ })
-          echo $newarr
           declare -a testarr=$(echo ${newarr[*]// /,})
-          echo $testarr
-          #Final Array 'a'
           a=($(echo "$testarr" | tr ',' '\n'))
-          echo "the array 'a' contains ${#a[@]} elements"
-          echo "Final Array is a = [ ${a[*]} ] "
           b=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${a[@]}")
-          echo $b
           echo "::set-output name=test::$b"
-          echo $test
+
   job2:
     needs: [job1]
     strategy:
       fail-fast: false
       matrix:
         input: ${{fromJSON(needs.job1.outputs.output1)}}
-    # name: "${{ matrix.job_name }}"
+    
     runs-on: ubuntu-latest
     steps:
-    #   - uses: actions/checkout@v2
-    # runs-on: ubuntu-latest
-    # needs: [job1]
-    # strategy:
-    #   matrix:
-    #      biapps: [${{needs.job1.outputs.output1}}]
-    # steps:
+      - name: Matrix Runs
       - run: echo ${{needs.job1.outputs.output1}} && echo ${{ matrix.input }}
 
