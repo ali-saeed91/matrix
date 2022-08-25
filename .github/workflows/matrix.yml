@@ -32,13 +32,13 @@ jobs:
           a=($(echo "$testarr" | tr ',' '\n'))
           echo "the array 'a' contains ${#a[@]} elements"
           echo "Final Array is a = [ ${a[*]} ] "
-          echo "::set-output name=test::${a[*]}"
+          echo "::set-output name=test::$(${a[*]} | ConvertTo-JSON -Compress))"
   job2:
     needs: [job1]
     strategy:
       fail-fast: false
       matrix:
-        include: ${{needs.job1.outputs.output1}}
+        include: ${{ fromJson(needs.job1.outputs.output1) }}
     # name: "${{ matrix.job_name }}"
     runs-on: ubuntu-latest
     steps:
