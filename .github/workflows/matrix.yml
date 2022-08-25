@@ -39,6 +39,7 @@ jobs:
           echo $testarr
           #Final Array 'a'
           a=($(echo "$testarr" | tr ',' '\n'))
-          echo ${a[*]}
+          echo "the array 'a' contains ${#a[@]} elements"
+          echo "Final Array is a = [ ${a[*]} ] "
 
 
